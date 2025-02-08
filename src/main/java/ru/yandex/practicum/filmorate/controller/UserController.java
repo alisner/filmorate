@@ -1,56 +1,67 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
+@RequiredArgsConstructor
+@RequestMapping("/users")
 @RestController
-@RequestMapping("users")
 public class UserController {
 
-    private final List<User> users = new ArrayList<>();
+    private final UserService userService;
+
+    @GetMapping
+    public List<User> getAllFilms() {
+        return userService.getAllUsers();
+    }
 
     @PostMapping
     public User addUser(@Valid @RequestBody User user) {
-        Optional<User> oUser = users.stream().filter(u -> u.getId().equals(user.getId())).findFirst();
-        if (oUser.isPresent()) throw new ValidationException("Такой пользователь уже существует");
-        users.add(user);
-        String s = "Добавлен пользователь: " + user.toString();
-        log.info(s);
-        return user;
+        return userService.createUser(user);
     }
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
-        users.stream().filter(u -> u.getId().equals(user.getId())).forEach(u -> {
-            u.setEmail(user.getEmail());
-            u.setLogin(user.getLogin());
-            u.setName(user.getName());
-            u.setBirthday(user.getBirthday());
-        });
-
-        User rUser = users.stream().filter(u -> u.getId().equals(user.getId())).findFirst().orElse(null);
-
-        for (User el : users) {
-            if (el.getId().equals(user.getId()))
-                rUser = el;
-        }
-
-        String s = "Обновлен пользователь: " + user.toString();
-        log.info(s);
-        return rUser;
+        return userService.updateUser(user);
     }
 
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
 
-    @GetMapping
-    public List<User> getAllFilms() {
-        return users;
+    @DeleteMapping("/{id}")
+    public void deleteUserById(@PathVariable Long id) {
+        userService.deleteUserById(userId);
+    }
+
+    @GetMapping("/{id}/friends")
+    public void getAllFriendsById(@PathVariable Long id) {
+        userService.getFriendByUserId(id);
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        userService.addFriend(id, friendId);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void deleteFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        userService.deleteFriend(id, friendId);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> get(@PathVariable Long id, @PathVariable Long otherId) {
+        return userService.getMutualFriends(id, otherId);
     }
 }

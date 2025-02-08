@@ -4,11 +4,14 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 @Data
 public class User {
 
-    private Integer id;
+    @NotNull
+    private Long id;
     @NotNull
     @Email(message = "email should be valid")
     private String email;
@@ -18,4 +21,6 @@ public class User {
     private String name;
     @Past
     private LocalDate birthday;
+
+    private Set<Long> friends;
 }

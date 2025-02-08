@@ -7,11 +7,13 @@ import lombok.Data;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 public class Film {
 
-    private Integer id;
+    @NotNull
+    private Long id;
 
     @NotNull
     private String name;
@@ -21,4 +23,6 @@ public class Film {
     private LocalDate releaseDate;
     @Positive
     private int duration; // в минутах
+
+    private Set<Long> likes;
 }
