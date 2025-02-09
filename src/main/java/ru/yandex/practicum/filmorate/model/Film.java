@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -12,16 +11,16 @@ import java.util.Set;
 @Data
 public class Film {
 
-    @NotNull
+    @NotNull(message = "Поле id обязательное")
     private Long id;
 
-    @NotNull
+    @NotNull(message = "Поле name обязательное")
     private String name;
-    @Size(max = 200)
+    @Size(max = 200, message = "Поле description нн должно превышать 200 символом")
     private String description;
-    @NotNull
+    @NotNull(message = "Поле releaseDate обязательное")
     private LocalDate releaseDate;
-    @Positive
+    @Positive(message = "Поле duration не может быть отрицательным")
     private int duration; // в минутах
 
     private Set<Long> likes;

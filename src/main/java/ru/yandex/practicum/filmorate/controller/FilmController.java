@@ -4,17 +4,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.IncorrectReleaseDateException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.service.UserService;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,7 +19,7 @@ public class FilmController {
 
     @GetMapping
     public List<Film> getAllFilms() {
-        return filmService.findTenMostPopularFilmsByLikes();
+        return filmService.getAllFilms();
     }
 
     @PostMapping
@@ -34,14 +27,14 @@ public class FilmController {
         return filmService.createFilm(film);
     }
 
-    @PutMapping
-    public Film updateFilm(@Valid @RequestBody Film film) {
-        return filmService.updateFilm(film);
-    }
-
     @GetMapping("/{id}")
     public Film getFilmById(@PathVariable Long id) {
         return filmService.getFilmById(id);
+    }
+
+    @PutMapping("{id}")
+    public Film updateFilm(@PathVariable Long id, @Valid @RequestBody Film film) {
+        return filmService.updateFilm(film);
     }
 
     @DeleteMapping("/{id}")
@@ -59,7 +52,7 @@ public class FilmController {
         filmService.removeLike(filmId, userId);
     }
 
-    @GetMapping("/{id}/popular")
+    @GetMapping("/popular")
     public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") Long count) {
         return filmService.getMostPopularFilmsOrderByLikes(count);
     }

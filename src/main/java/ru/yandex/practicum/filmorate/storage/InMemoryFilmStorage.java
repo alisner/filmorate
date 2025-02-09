@@ -12,7 +12,8 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film save(Film film) {
-        return films.put(film.getId(), film);
+        films.put(film.getId(), film);
+        return films.get(film.getId());
     }
 
     @Override
@@ -31,8 +32,8 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Map<Long, Film> findAll() {
-        return films;
+    public List<Film> findAll() {
+        return films.values().stream().toList();
     }
 
 
